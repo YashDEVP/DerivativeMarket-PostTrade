@@ -5,6 +5,7 @@ import java.time.LocalDate;
 //POJO Class
 
 public class TradeDTO {
+    private long refId;
 
     private Long ticketId;
 
@@ -25,7 +26,8 @@ public class TradeDTO {
 
     }
 
-    public TradeDTO(Long ticketId, String party, String counterParty, Integer amount, String productType, LocalDate tradeDate, String workflow) {
+    public TradeDTO(long refId, Long ticketId, String party, String counterParty, Integer amount, String productType, LocalDate tradeDate, String workflow) {
+        this.refId = refId;
         this.ticketId = ticketId;
         this.party = party;
         this.counterParty = counterParty;
@@ -89,5 +91,13 @@ public class TradeDTO {
 
     public String getWorkflow() {
         return workflow;
+    }
+
+    public long getRefId() {
+        return refId;
+    }
+
+    public void setRefId(long refId) {
+        this.refId = refId;
     }
 }
