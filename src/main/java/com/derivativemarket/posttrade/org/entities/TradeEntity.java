@@ -10,20 +10,20 @@ import java.time.LocalDate;
 
 /* we can store sensitive information here instead of TradeDTO it is not exposed to user
 */
+/*@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor all annotation are related to lombok */
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-/*@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor all annotation are related to lombok */
 @Table(name="isdaaccount")
 public class TradeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long refId;
 
     private Long ticketId;
