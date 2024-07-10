@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 /*Contains @Controller and @ResponseBody
 @ResponseBody Return JSON and XML directly to the response body
@@ -46,5 +47,20 @@ public class PostTradeController {
     @PostMapping
     public TradeDTO insertTrade(@RequestBody TradeDTO inputTrade){
         return marketService.insertTrade(inputTrade);
+    }
+
+    @PutMapping(path="/{tradeId}")
+    public TradeDTO updateTradeById(@RequestBody TradeDTO tradeDTO,@PathVariable Long tradeId){
+        return marketService.updateTradeById(tradeId,tradeDTO);
+    }
+
+    @DeleteMapping(path="/{refId}")
+    public Boolean termination(@PathVariable Long refId){
+       return marketService.termination(refId);
+    }
+
+    @PatchMapping(path="/{refId}")
+    public TradeDTO reuploadTrade(@PathVariable Long refId, @RequestBody Map<String,Object> updates){
+        return marketService.reuploadTrade(refId,updates);
     }
 }
