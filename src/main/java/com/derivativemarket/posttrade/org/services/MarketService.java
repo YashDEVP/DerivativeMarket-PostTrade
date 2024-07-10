@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,9 +26,10 @@ public class MarketService {
         this.modelMapper=modelMapper;
     }
 
-    public TradeDTO getTradeByTicketId(Long id) {
-        TradeEntity tradeEntity= marketRepository.findById(id).orElse(null);
-        return modelMapper.map(tradeEntity, TradeDTO.class);
+    public Optional<TradeDTO> getTradeByTicketId(Long id) {
+//        Optional<TradeEntity> tradeEntity= marketRepository.findById(id);
+//        return modelMapper.map(tradeEntity, TradeDTO.class);
+        return marketRepository.findById(id).map(tradeEntity-> modelMapper.map(tradeEntity,TradeDTO.class));
     }
 
     public List<TradeDTO> getAllTrades() {
