@@ -4,6 +4,7 @@ import com.derivativemarket.posttrade.org.dto.TradeDTO;
 import com.derivativemarket.posttrade.org.entities.TradeEntity;
 import com.derivativemarket.posttrade.org.repositories.MarketRepository;
 import com.derivativemarket.posttrade.org.services.MarketService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,13 +51,13 @@ public class PostTradeController {
     @RequestBody when we need to pass whole json obj as parameter
      */
     @PostMapping
-    public ResponseEntity<TradeDTO> insertTrade(@RequestBody TradeDTO inputTrade){
+    public ResponseEntity<TradeDTO> insertTrade(@RequestBody @Valid TradeDTO inputTrade){
         TradeDTO tradeDTO= marketService.insertTrade(inputTrade);
         return new ResponseEntity<>(tradeDTO, HttpStatus.CREATED);
     }
 
     @PutMapping(path="/{tradeId}")
-    public ResponseEntity<TradeDTO> updateTradeById(@RequestBody TradeDTO tradeDTO,@PathVariable Long tradeId){
+    public ResponseEntity<TradeDTO> updateTradeById(@RequestBody @Valid TradeDTO tradeDTO,@PathVariable Long tradeId){
         return ResponseEntity.ok(marketService.updateTradeById(tradeId,tradeDTO));
     }
 
