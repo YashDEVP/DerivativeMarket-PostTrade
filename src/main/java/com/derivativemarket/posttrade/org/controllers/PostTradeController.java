@@ -2,8 +2,10 @@ package com.derivativemarket.posttrade.org.controllers;
 
 import com.derivativemarket.posttrade.org.dto.TradeDTO;
 import com.derivativemarket.posttrade.org.entities.TradeEntity;
+import com.derivativemarket.posttrade.org.exception.ResourceNotFoundException;
 import com.derivativemarket.posttrade.org.repositories.MarketRepository;
 import com.derivativemarket.posttrade.org.services.MarketService;
+import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /*Contains @Controller and @ResponseBody
@@ -29,16 +32,22 @@ public class PostTradeController {
     }
 
 
-    /* @PathVariable parameter i mandatory to pass and
+    /* @PathVariable parameter is mandatory to pass and
     @RequestParam optional parameter then it will work
     */
-    @GetMapping("/{ticketId}")
-    public ResponseEntity<TradeDTO> getTradeByTicketId(@PathVariable Long id){
+    /*refId in GetMapping and refId should have same name otherwise it will give exception*/
+    @GetMapping("/{refId}")
+    public ResponseEntity<TradeDTO> getTradeByTicketId(@PathVariable(name="refId") Long id){
        Optional<TradeDTO> tradeDTO=marketService.getTradeByTicketId(id);
       return tradeDTO
               .map(tradeDTO1 -> ResponseEntity.ok(tradeDTO1))
-              .orElse(ResponseEntity.notFound().build());
+              .orElseThrow(()->new ResourceNotFoundException("Trade was not found"));
     }
+
+//    @ExceptionHandler(NoSuchElementException.class)
+//    public ResponseEntity<String> handledEmployeeNotFound(NoSuchElementException exception){
+//        return new ResponseEntity<>("Trade was not found in the database",HttpStatus.NOT_FOUND);
+//    }
 
     /*get all the employee in sorted order by date*/
     @GetMapping()
