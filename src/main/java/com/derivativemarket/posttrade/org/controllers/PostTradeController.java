@@ -57,7 +57,7 @@ public class PostTradeController {
     }
 
     @PutMapping(path="/{tradeId}")
-    public ResponseEntity<TradeDTO> updateTradeById(@RequestBody TradeDTO tradeDTO,@PathVariable Long tradeId){
+    public ResponseEntity<TradeDTO> updateTradeById(@RequestBody @Valid TradeDTO tradeDTO,@PathVariable Long tradeId){
         return ResponseEntity.ok(marketService.updateTradeById(tradeId,tradeDTO));
     }
 

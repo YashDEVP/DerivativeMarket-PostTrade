@@ -1,5 +1,6 @@
 package com.derivativemarket.posttrade.org.dto;
 
+import com.derivativemarket.posttrade.org.annotation.SupWorkflowValidation;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +40,7 @@ public class TradeDTO {
     private LocalDate tradeDate;
 
     @NotNull(message = "You have to provide workflow")
-    @Pattern(regexp="^(SEF|NOVATION|CAPFLOOR)$",message="Currently we are supporting these three role (IRS | NOVATION |CAPFLOOR)")
+    @SupWorkflowValidation
+    //@Pattern(regexp="^(SEF|NOVATION|CAPFLOOR)$",message="Currently we are supporting these three role (IRS | NOVATION |CAPFLOOR)")
     private String workflow;
 }
