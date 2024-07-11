@@ -2,7 +2,9 @@ package com.derivativemarket.posttrade.org.services;
 
 import com.derivativemarket.posttrade.org.dto.TradeDTO;
 import com.derivativemarket.posttrade.org.entities.TradeEntity;
+import com.derivativemarket.posttrade.org.exception.ResourceNotFoundException;
 import com.derivativemarket.posttrade.org.repositories.MarketRepository;
+import jakarta.annotation.Resource;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.util.ReflectionUtils;
 import org.springframework.stereotype.Service;
@@ -47,23 +49,25 @@ public class MarketService {
     }
 
     public TradeDTO updateTradeById(Long tradeId, TradeDTO tradeDTO) {
+        matchedTrade(tradeId);
         TradeEntity tradeEntity=modelMapper.map(tradeDTO, TradeEntity.class);
         tradeEntity.setRefId(tradeId);
         TradeEntity savedTrade= marketRepository.save(tradeEntity);
         return modelMapper.map(savedTrade, TradeDTO.class);
     }
-    public Boolean matchedTrade(Long refId){
-        return marketRepository.existsById(refId);
+    public void matchedTrade(Long refId){
+        Boolean existTrade=marketRepository.existsById(refId);
+        if(!existTrade) throw new ResourceNotFoundException("Trade is not found in org database " + refId);
     }
     public Boolean termination(Long refId) {
-        if(!matchedTrade(refId))return false;
+        matchedTrade(refId);
         marketRepository.deleteById(refId);
         return true;
 
     }
     /*Reflection method used to update value of property of particular class*/
     public TradeDTO reuploadTrade(Long refId, Map<String,Object> updates) {
-            if(!matchedTrade(refId)) return null;
+            matchedTrade(refId);
             TradeEntity tradeEntity=marketRepository.findById(refId).orElse(null);
             updates.forEach((field,value)->{
                     Field fieldToBeUpated= ReflectionUtils.findRequiredField(TradeEntity.class,field);
