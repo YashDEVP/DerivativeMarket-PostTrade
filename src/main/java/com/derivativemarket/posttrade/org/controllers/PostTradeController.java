@@ -3,9 +3,7 @@ package com.derivativemarket.posttrade.org.controllers;
 import com.derivativemarket.posttrade.org.dto.TradeDTO;
 import com.derivativemarket.posttrade.org.entities.TradeEntity;
 import com.derivativemarket.posttrade.org.exception.ResourceNotFoundException;
-import com.derivativemarket.posttrade.org.repositories.MarketRepository;
 import com.derivativemarket.posttrade.org.services.MarketService;
-import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /*Contains @Controller and @ResponseBody
