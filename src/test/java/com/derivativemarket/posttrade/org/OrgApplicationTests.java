@@ -14,7 +14,7 @@ class OrgApplicationTests {
 
 	@Test
 	void contextLoads() {
-		CompanyEntity companyEntity=new CompanyEntity(4L,"rooshad@derivativemarkit.com","password123","ABC.OPS","5040","ABC Capital");
+		CompanyEntity companyEntity=new CompanyEntity(4L,"rooshad@derivativemarkit.com","password123","ABC.OPS","ABC Capital");
 		String token=jwtService.generateToken(companyEntity);
 
 		System.out.println(token);

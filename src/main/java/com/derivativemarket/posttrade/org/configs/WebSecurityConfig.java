@@ -23,7 +23,7 @@ public class WebSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth ->auth
-                        .requestMatchers("/trades","/error").permitAll() // this will exclude this url from authenticate
+                        .requestMatchers("/trades","/error","/auth/**").permitAll() // this will exclude this url from authenticate
                         .requestMatchers("/trades/**").hasAnyRole("Developer","QA","BA") //specific user any perform this api
                         .anyRequest().authenticated()) //this will authenticate all the request.
                 .csrf(csrfConfig -> csrfConfig.disable()) //to disable CSRF Token
@@ -36,6 +36,8 @@ public class WebSecurityConfig {
         return httpSecurity.build();
     }
 
+    //we have created signup flow with jwt token so  i have commented this becoz we need two user
+    /*
     @Bean
     UserDetailsService myInMemoryUserDetailsService(){
         UserDetails developer= User.withUsername("Hemant ")
@@ -55,7 +57,7 @@ public class WebSecurityConfig {
         return new InMemoryUserDetailsManager(developer,fundManager,bA);
 
     }
-
+    */
     @Bean
     PasswordEncoder passwordEncoder(){
         return  new BCryptPasswordEncoder();
