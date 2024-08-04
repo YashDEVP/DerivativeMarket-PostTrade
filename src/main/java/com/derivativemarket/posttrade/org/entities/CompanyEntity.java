@@ -28,8 +28,6 @@ public class CompanyEntity implements UserDetails {
 
     private String companyShortName;
 
-    private String companyId;
-
     private String companyName;
 
     @Override
