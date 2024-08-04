@@ -1,6 +1,7 @@
 package com.derivativemarket.posttrade.org.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,7 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
 public class CompanyEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +31,6 @@ public class CompanyEntity implements UserDetails {
     private String companyId;
 
     private String companyName;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
