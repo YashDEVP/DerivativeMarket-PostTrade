@@ -1,13 +1,17 @@
 package com.derivativemarket.posttrade.org.services;
 
 import com.derivativemarket.posttrade.org.dto.CompanyDTO;
+import com.derivativemarket.posttrade.org.dto.LoginDTO;
 import com.derivativemarket.posttrade.org.dto.SignUpDTO;
 import com.derivativemarket.posttrade.org.entities.CompanyEntity;
 import com.derivativemarket.posttrade.org.exception.ResourceNotFoundException;
 import com.derivativemarket.posttrade.org.repositories.CompanyRepo;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +27,6 @@ public class CompanyService implements UserDetailsService {
     private final CompanyRepo companyRepo;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
-
 
     @Override
     public CompanyEntity loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -50,4 +53,6 @@ public class CompanyService implements UserDetailsService {
         System.out.println("savedCompany"+savedCompany.toString());
         return companyDTO;
     }
+
+
 }
