@@ -39,7 +39,15 @@ public class CompanyService implements UserDetailsService {
        CompanyEntity newCompany= modelMapper.map(signUpDTO, CompanyEntity.class);
        newCompany.setPassword(passwordEncoder.encode(newCompany.getPassword()));
         CompanyEntity savedCompany=companyRepo.save(newCompany);
-        CompanyDTO companyDTO=modelMapper.map(savedCompany,CompanyDTO.class);
+        System.out.println("savedCompany"+savedCompany.toString());
+        //CompanyDTO companyDTO=modelMapper.map(savedCompany,CompanyDTO.class);
+        CompanyDTO companyDTO=new CompanyDTO();
+        companyDTO.setCompanyEmail(savedCompany.getCompanyEmail());
+        companyDTO.setId(savedCompany.getId());
+        companyDTO.setCompanyName(savedCompany.getCompanyName());
+        companyDTO.setCompanyShortName(savedCompany.getCompanyShortName());
+        System.out.println("companyDTO"+companyDTO.toString());
+        System.out.println("savedCompany"+savedCompany.toString());
         return companyDTO;
     }
 }
