@@ -25,7 +25,7 @@ public class JwtService {
     public String generateToken(CompanyEntity companyEntity){
         return Jwts.builder()
                 .subject(companyEntity.getId().toString())
-                .claim("emial",companyEntity.getCompanyEmail())
+                .claim("email",companyEntity.getCompanyEmail())
                 .claim("roles", Set.of("FundManager","Developer"))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+1000*60))

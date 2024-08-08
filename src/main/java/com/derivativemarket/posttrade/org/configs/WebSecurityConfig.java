@@ -2,7 +2,9 @@ package com.derivativemarket.posttrade.org.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,7 +25,7 @@ public class WebSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth ->auth
-                        .requestMatchers("/trades","/error").permitAll() // this will exclude this url from authenticate
+                        .requestMatchers("/trades","/error","/auth/**","/h2-console/**").permitAll() // this will exclude this url from authenticate
                         .requestMatchers("/trades/**").hasAnyRole("Developer","QA","BA") //specific user any perform this api
                         .anyRequest().authenticated()) //this will authenticate all the request.
                 .csrf(csrfConfig -> csrfConfig.disable()) //to disable CSRF Token
@@ -36,6 +38,8 @@ public class WebSecurityConfig {
         return httpSecurity.build();
     }
 
+    //we have created signup flow with jwt token so  i have commented this becoz we need two user
+    /*
     @Bean
     UserDetailsService myInMemoryUserDetailsService(){
         UserDetails developer= User.withUsername("Hemant ")
@@ -55,9 +59,14 @@ public class WebSecurityConfig {
         return new InMemoryUserDetailsManager(developer,fundManager,bA);
 
     }
-
+    */
     @Bean
     PasswordEncoder passwordEncoder(){
         return  new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+        return config.getAuthenticationManager();
     }
 }
