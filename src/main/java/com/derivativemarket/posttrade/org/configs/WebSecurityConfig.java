@@ -1,5 +1,7 @@
 package com.derivativemarket.posttrade.org.configs;
 
+import com.derivativemarket.posttrade.org.filters.JwtAuthFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,25 +17,33 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
+
+    private final JwtAuthFilter jwtAuthFilter;
 
     /*formLogin(Customizer.withDefaults() this will give default login page that is provided by spring security */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth ->auth
-                        .requestMatchers("/trades","/error","/auth/**","/h2-console/**").permitAll() // this will exclude this url from authenticate
-                        .requestMatchers("/trades/**").hasAnyRole("Developer","QA","BA") //specific user any perform this api
+                        .requestMatchers("/error","/auth/**","/h2-console/**").permitAll() // this will exclude this url from authenticate
+                        //.requestMatchers("/trades/**").hasAnyRole("Developer","QA","BA") //specific user any perform this api
                         .anyRequest().authenticated()) //this will authenticate all the request.
                 .csrf(csrfConfig -> csrfConfig.disable()) //to disable CSRF Token
-                .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));  /*  ALWAYS, create session and use that session
+                .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                  /*  ALWAYS, create session and use that session
     NEVER,create session and never use that session
     IF_REQUIRED, not create session but you can use the session
     STATELESS  neither create a session nor use that session;
     */
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        ;
+
                // .formLogin(Customizer.withDefaults());  we are not creating a session that's wh we are remove login page in future we will use JWT token
         return httpSecurity.build();
     }
@@ -60,10 +70,6 @@ public class WebSecurityConfig {
 
     }
     */
-    @Bean
-    PasswordEncoder passwordEncoder(){
-        return  new BCryptPasswordEncoder();
-    }
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
