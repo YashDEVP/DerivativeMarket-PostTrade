@@ -68,7 +68,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ApiResponse<?>> handleAuthenticationException(JwtException ex){
+    public ResponseEntity<ApiResponse<?>> handleJwtException(JwtException ex){
         ApiError apiError=ApiError.builder().
                 status(HttpStatus.UNAUTHORIZED).
                 message(ex.getLocalizedMessage()).
