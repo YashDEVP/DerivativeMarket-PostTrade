@@ -33,6 +33,11 @@ public class CompanyService implements UserDetailsService {
         return companyRepo.findByCompanyEmail(email).orElseThrow(()-> new ResourceNotFoundException("Company with this email : " +email+"not found"));
     }
 
+    public CompanyEntity getCompanyById(long Id){
+        return  companyRepo.findById(Id).orElseThrow(()-> new ResourceNotFoundException("company with " +
+                "id "+Id+" not found"));
+    }
+
     public CompanyDTO signUp(SignUpDTO signUpDTO) {
 
        Optional<CompanyEntity> companyEntity= companyRepo.findByCompanyEmail(signUpDTO.getCompanyEmail());

@@ -1,8 +1,11 @@
 package com.derivativemarket.posttrade.org.advices;
 
 import com.derivativemarket.posttrade.org.exception.ResourceNotFoundException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,5 +56,23 @@ public class GlobalExceptionHandler {
 
     private ResponseEntity<ApiResponse<?>> buildErrorResponseEntity(ApiError apiError) {
         return new ResponseEntity<>(new ApiResponse(apiError),apiError.getStatus());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<?>> handleAuthenticationException(AuthenticationException ex){
+        ApiError apiError=ApiError.builder().
+                status(HttpStatus.UNAUTHORIZED).
+                message(ex.getLocalizedMessage()).
+                build();
+        return buildErrorResponseEntity(apiError);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ApiResponse<?>> handleAuthenticationException(JwtException ex){
+        ApiError apiError=ApiError.builder().
+                status(HttpStatus.UNAUTHORIZED).
+                message(ex.getLocalizedMessage()).
+                build();
+        return buildErrorResponseEntity(apiError);
     }
 }
