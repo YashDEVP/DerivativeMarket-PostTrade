@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity //we are telling spring bot security that we are configuring security filter chain
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -44,7 +44,7 @@ public class WebSecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         ;
 
-               // .formLogin(Customizer.withDefaults());  we are not creating a session that's wh we are remove login page in future we will use JWT token
+               // .formLogin(Customizer.withDefaults());  we are not creating a session that's wh we are remove login page in future we will use JWT token(STATELESS)
         return httpSecurity.build();
     }
 
