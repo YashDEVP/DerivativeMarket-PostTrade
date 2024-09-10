@@ -1,6 +1,7 @@
 package com.derivativemarket.posttrade.org.configs;
 
 import com.derivativemarket.posttrade.org.filters.JwtAuthFilter;
+import com.derivativemarket.posttrade.org.handlers.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,13 +26,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     /*formLogin(Customizer.withDefaults() this will give default login page that is provided by spring security */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth ->auth
-                        .requestMatchers("/error","/auth/**","/h2-console/**").permitAll() // this will exclude this url from authenticate
+                        .requestMatchers("/error","/auth/**","/h2-console/**","/home.html").permitAll() // this will exclude this url from authenticate
                         //.requestMatchers("/trades/**").hasAnyRole("Developer","QA","BA") //specific user any perform this api
                         .anyRequest().authenticated()) //this will authenticate all the request.
                 .csrf(csrfConfig -> csrfConfig.disable()) //to disable CSRF Token
@@ -42,6 +44,9 @@ public class WebSecurityConfig {
     STATELESS  neither create a session nor use that session;
     */
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2Config -> oauth2Config.failureUrl("/login?error=true")
+                        .successHandler(oAuth2SuccessHandler))
+
         ;
 
                // .formLogin(Customizer.withDefaults());  we are not creating a session that's wh we are remove login page in future we will use JWT token(STATELESS)
