@@ -38,6 +38,10 @@ public class CompanyService implements UserDetailsService {
                 "id "+Id+" not found"));
     }
 
+    public CompanyEntity getCompanyByEmail(String email){
+        return  companyRepo.findByCompanyEmail(email).orElse(null);
+    }
+
     public CompanyDTO signUp(SignUpDTO signUpDTO) {
 
        Optional<CompanyEntity> companyEntity= companyRepo.findByCompanyEmail(signUpDTO.getCompanyEmail());
@@ -60,4 +64,7 @@ public class CompanyService implements UserDetailsService {
     }
 
 
+    public CompanyEntity save(CompanyEntity newCompany) {
+        return companyRepo.save(newCompany);
+    }
 }
