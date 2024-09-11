@@ -16,6 +16,7 @@ public class AuthService {
     private  final AuthenticationManager authenticationManager;
     private  final JwtService jwtService;
     private final CompanyService companyService;
+    private final SessionService sessionService;
 
     public LoginResponseDTO logIn(LoginDTO loginDTO) {
         Authentication authentication=authenticationManager.authenticate(
@@ -24,6 +25,7 @@ public class AuthService {
         CompanyEntity companyEntity=(CompanyEntity) authentication.getPrincipal();
         String accessToken=jwtService.generateAccessToken(companyEntity);
         String refreshToken=jwtService.generateRefreshToken(companyEntity);
+        sessionService.generateNewSession(companyEntity,refreshToken);
         return new LoginResponseDTO(companyEntity.getId(),accessToken,refreshToken);
     }
 
