@@ -46,7 +46,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         ) {
             CompanyEntity companyEntity = companyService.getCompanyById(companyId);
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                    companyEntity, null, null
+                    companyEntity, null, companyEntity.getAuthorities()
             );
             usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource()
                     .buildDetails(request));

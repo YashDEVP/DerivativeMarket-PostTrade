@@ -1,6 +1,9 @@
 package com.derivativemarket.posttrade.org.dto;
 
+import com.derivativemarket.posttrade.org.entities.enums.Role;
 import lombok.Data;
+
+import java.util.Set;
 
 @Data
 public class SignUpDTO {
@@ -12,4 +15,6 @@ public class SignUpDTO {
     private String companyShortName;
 
     private String companyName;
+
+    private Set<Role> roles;
 }
