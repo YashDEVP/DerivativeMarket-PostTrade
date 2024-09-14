@@ -1,6 +1,8 @@
 package com.derivativemarket.posttrade.org.entities;
 
+import com.derivativemarket.posttrade.org.entities.enums.Permission;
 import com.derivativemarket.posttrade.org.entities.enums.Role;
+import com.derivativemarket.posttrade.org.utils.PermissionMapping;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -9,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,8 +44,16 @@ public class CompanyEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream().map(roles -> new SimpleGrantedAuthority("ROLE_"+roles.name()))
-                .collect(Collectors.toSet());
+        Set<SimpleGrantedAuthority> authorities=new HashSet<>();
+        roles.forEach(
+                role -> {
+                    Set<SimpleGrantedAuthority> permissions = PermissionMapping.getAuthorityForRole(role);
+                    authorities.addAll(permissions);
+                    authorities.add(new SimpleGrantedAuthority("ROLE_"+role.name()));
+                }
+        );
+
+        return authorities;
     }
 
     @Override
