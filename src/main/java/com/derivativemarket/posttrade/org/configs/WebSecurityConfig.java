@@ -1,5 +1,6 @@
 package com.derivativemarket.posttrade.org.configs;
 
+import com.derivativemarket.posttrade.org.entities.enums.Permission;
 import com.derivativemarket.posttrade.org.filters.JwtAuthFilter;
 import com.derivativemarket.posttrade.org.handlers.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.derivativemarket.posttrade.org.entities.enums.Role.BA;
 import static com.derivativemarket.posttrade.org.entities.enums.Role.Developer;
 
 @Configuration
@@ -42,6 +44,8 @@ public class WebSecurityConfig {
                         .requestMatchers(publicRoutes).permitAll() // this will exclude this url from authenticate
                         //.requestMatchers("/trades/**").hasAnyRole("Developer","QA","BA") //specific user any perform this api
                         .requestMatchers(HttpMethod.GET,"/trades/**").hasRole(Developer.name())
+                        .requestMatchers(HttpMethod.POST,"/trades").hasAnyAuthority(Permission.TRADE_REUPLOAD.name())
+
                         .anyRequest().authenticated()) //this will authenticate all the request.
                 .csrf(csrfConfig -> csrfConfig.disable()) //to disable CSRF Token
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
