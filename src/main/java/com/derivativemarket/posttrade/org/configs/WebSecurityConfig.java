@@ -1,9 +1,12 @@
 package com.derivativemarket.posttrade.org.configs;
 
+import com.derivativemarket.posttrade.org.entities.enums.Permission;
 import com.derivativemarket.posttrade.org.filters.JwtAuthFilter;
+import com.derivativemarket.posttrade.org.handlers.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -19,20 +22,30 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.derivativemarket.posttrade.org.entities.enums.Role.BA;
+import static com.derivativemarket.posttrade.org.entities.enums.Role.Developer;
+
 @Configuration
 @EnableWebSecurity //we are telling spring bot security that we are configuring security filter chain
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
-
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private static final String[] publicRoutes={
+            "/error","/auth/**","/h2-console/**","/home.html"
+    }
+;
     /*formLogin(Customizer.withDefaults() this will give default login page that is provided by spring security */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth ->auth
-                        .requestMatchers("/error","/auth/**","/h2-console/**").permitAll() // this will exclude this url from authenticate
+                        .requestMatchers(publicRoutes).permitAll() // this will exclude this url from authenticate
                         //.requestMatchers("/trades/**").hasAnyRole("Developer","QA","BA") //specific user any perform this api
+                        .requestMatchers(HttpMethod.GET,"/trades/**").hasRole(Developer.name())
+                        .requestMatchers(HttpMethod.POST,"/trades").hasAnyAuthority(Permission.TRADE_REUPLOAD.name())
+
                         .anyRequest().authenticated()) //this will authenticate all the request.
                 .csrf(csrfConfig -> csrfConfig.disable()) //to disable CSRF Token
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -42,6 +55,9 @@ public class WebSecurityConfig {
     STATELESS  neither create a session nor use that session;
     */
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2Config -> oauth2Config.failureUrl("/login?error=true")
+                        .successHandler(oAuth2SuccessHandler))
+
         ;
 
                // .formLogin(Customizer.withDefaults());  we are not creating a session that's wh we are remove login page in future we will use JWT token(STATELESS)
