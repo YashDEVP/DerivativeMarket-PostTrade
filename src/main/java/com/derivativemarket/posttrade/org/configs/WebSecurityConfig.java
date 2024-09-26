@@ -7,9 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,6 +30,7 @@ import static com.derivativemarket.posttrade.org.entities.enums.Role.Developer;
 @Configuration
 @EnableWebSecurity //we are telling spring bot security that we are configuring security filter chain
 @RequiredArgsConstructor
+//@EnableMethodSecurity(securedEnabled = true) //role based security
 public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
